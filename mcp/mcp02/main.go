@@ -46,7 +46,7 @@ func queryDataStore(query string) string {
 }
 
 // 调用 OpenAI 并解析计划
-func analyzeIntent(userInput string) (string, string, string) {
+func analyzeIntent(userInput string) (intent string, args string, output string) {
 	prompt := buildMCPPrompt(userInput)
 
 	resp, err := client.CreateChatCompletion(context.Background(), openai.ChatCompletionRequest{
@@ -61,11 +61,11 @@ func analyzeIntent(userInput string) (string, string, string) {
 		log.Fatal(err)
 	}
 
-	output := resp.Choices[0].Message.Content
+	output = resp.Choices[0].Message.Content
 	fmt.Println("🧠 MCP计划输出:\n", output)
 
 	// 简单解析（可使用JSON解析替代）
-	var intent, args string
+	// var intent, args string
 	if strings.Contains(output, "webSearch") {
 		intent = "webSearch"
 	} else if strings.Contains(output, "runCode") {
